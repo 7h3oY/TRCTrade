@@ -1,0 +1,295 @@
+<div class="card my-2 postCards" id="card-{{this.moto.id}}">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <img src="/Motos/resources/uploads/{{this.moto.id}}/{{this.moto.portada}}" class="card-img" alt="...">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h5 class="card-title">{{this.moto.nombreMarca}} {{this.moto.modelo}}</h5>
+            </div>
+            <div class="col" id="pujaActual-{{this.moto.id}}" style=" color:#29aeab" >
+              <h5 class="card-title" id="pujaActual-{{this.moto.id}}">Puja Actual: {{this.montoPuja}}</h5>
+            </div>
+          </div>
+        <p class="card-text">Ano :{{this.moto.ano}}</p>
+        <p class="card-text">{{this.moto.kilometraje}} Kms</p>
+        <p class="card-text">Inicio Remate: {{this.moto.inicio_remate}}</p>
+        <p class="card-text" id="finRemate-{{this.moto.id}}">Fin Remate: </p>
+        <h5 class="card-title">Precio Minimo Venta: {{this.moto.precio_minimo}}</h5>
+        <a class="btn btn-primary" id="btnPujar-{{this.moto.id}}" style="background:#29aeab; color:black" data-bs-toggle="modal" data-bs-target="#modalPuja-{{this.moto.id}}"><i class="bi bi-wallet2"></i>Pujar</a>
+        {{#if this.favorito}}
+          <button type="button" class="btn btn-danger" id="btnEnviarPujas-{{this.id}}" onclick="dejarSeguir('{{this.favorito.id}}')"><i class="bi bi-star-fill"></i>Dejar de Segir</button>
+        {{else}}
+         <button type="button" class="btn btn-primary" id="btnEnviarPujas-{{this.id}}" onclick="agregarFavorito('{{this.moto.id}}')"><i class="bi bi-star-fill"></i>Agregar a Favorito</button>
+        {{/if}}
+        <a class="btn btn-primary" id="btnComparar-{{this.moto.id}}" onclick="addComparar('{{json this.moto}}')"><i class="bi bi-bicycle"></i>Comparar</a>
+        <a class="btn btn-primary" onclick="referenciaMoto('{{json this.moto}}')" ><i class="bi bi-tags"></i>Referencia</a>
+        <a class="btn btn-primary" href="/Motos/detallemoto/{{this.moto.id}}"><i class="bi bi-binoculars"></i>Ver Detalles</a>
+      </div>
+    </div>
+  </div>
+
+    <div class="modal fade" id="modalPuja-{{this.moto.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Ingrese Monto</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Articulo : {{this.moto.marca}} {{this.moto.modelo}}</p>
+        <p>Ano : {{this.moto.ano}} </p>
+        <p>Valor Inicio : {{this.moto.precio_minimo}} </p>
+        <p  id="finRemate-{{this.moto.id}}">Finaliza en : {{this.moto.precio_minimo}} </p>
+        <hr>
+        <h4>Ingrese Monto</h4>
+          <div class="container">          
+            <div class="input-group mb-3">
+              <span class="input-group-text">$</span> 
+              {{#if this.montoPuja}}
+              <input type="number" step="100000" min="0" class="form-control" id="monto-{{this.moto.id}}" aria-label="Monto en pesos" value="{{this.montoPuja}}">
+              {{else}}
+              <input type="number" step="100000" min="0" class="form-control" id="monto-{{this.moto.id}}" aria-label="Monto en pesos" value="{{this.moto.precio_minimo}}">
+              {{/if}}
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btnEnviarPujas-{{this.moto.id}}" onclick="enviarPujas('{{this.moto.id}}')">Pujar</button>
+      </div>
+    </div>
+  </div>
+</div>
+ <div class="modal fade " id="modalReferencia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Referencias en Chile Autos</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="bodyModalReferencia">
+        <table class="table" id="tableReferencia">
+          <thead>
+            <tr>
+              <th scope="col">Marca</th>
+              <th scope="col">Modelo</th>
+              <th scope="col">Ano</th>
+              <th scope="col">Kilometraje</th>
+              <th scope="col">Prrecio</th>
+            </tr>
+          </thead>
+          <tbody id="bodyRef">
+            
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" onclick="limpiarComparar()">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btnComparar" data-bs-dismiss="modal">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+</div>
+
+<script>
+  let botonPuja = document.getElementById("btnPujar-{{this.moto.id}}");
+  let botonPujar = document.getElementById("btnEnviarPujas-{{this.moto.id}}");
+  let btnModal = document.getElementById("btnComparador");
+  let idMotoRef = 0;
+  function enviarPujas(id) {
+    let idMoto = id;
+    let montoInput = document.getElementById("monto-"+id);
+    let usuario = JSON.parse(localStorage.getItem("user"));
+    let monto = parseFloat(montoInput.value) || 0; 
+    if(usuario != null){
+      let data = {
+      monto: monto,
+      id_pujador: usuario.id,
+      id_moto: idMoto
+    }
+
+    fetch("/Motos/Post/pujar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => {
+      if (response.ok) {
+        Noti('exito', "Has pujado con éxito por la moto {{this.moto.marca}} - {{this.moto.modelo}}" );
+        return response.json();
+      } else {
+        Noti('error',"Error al pujar por la moto {{this.moto.marca}} - {{this.moto.modelo}}");
+        throw new Error("Error en la solicitud");
+      }
+    })
+    .then(result => {
+      location.href = "/Motos/home";
+    });
+    }else{
+      Noti('error',"Inicia Sesion para Pujar");
+  }
+
+} 
+
+  function agregarFavorito(id) {
+    let usuario = JSON.parse(localStorage.getItem("user"));
+    if(usuario != null){
+      let data = {
+        id_moto: id,
+        id_usuario: usuario.id
+      }
+        fetch("/Motos/Post/addfavorito", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => {
+      if (response.ok) {
+        Noti('exito', "Guardaste la moto {{this.moto.marca}} - {{this.moto.modelo}} en tus favoritos");
+        return response.json();
+      } else {
+        Noti('error', "Error al guardar la moto {{this.moto.marca}} - {{this.moto.modelo}}");
+        throw new Error("Error en la solicitud");
+      }
+    });
+    }else{
+      Noti('error',"Debe iniciar sesion para agregar a favoritos");
+    }
+    
+  }
+
+  function dejarSeguir(id) {
+    let usuario = JSON.parse(localStorage.getItem("user"));
+    if(usuario != null){
+      let data = {
+        id: id,
+      }
+        fetch("/Motos/Post/delfavorito", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => {
+      if (response.ok) {
+        Noti('exito', "Dejaste de seguir la moto {{this.moto.marca}} - {{this.moto.modelo}} en tus favoritos");
+        return response.json();
+      } else {
+        Noti('error', "Error al eliminar la moto {{this.moto.marca}} - {{this.moto.modelo}}");
+        throw new Error("Error en la solicitud");
+      }
+    })
+    }else{
+      Noti('error',"Debe iniciar sesion para eliminar de favoritos");
+    }
+    
+  }
+
+  function addComparar(moto) {
+     addToComparar(moto);
+  }
+
+  function referenciaMoto(moto) {
+    referenciaChileautos(moto);
+  }
+
+
+function poblarModalChileAutos(listaDatos) {
+  console.log(idMotoRef);
+    let modalBody = document.getElementById('bodyModalReferencia');
+    let bodyTabla = document.getElementById('bodyRef');
+    bodyTabla.innerHTML = '';
+     listaDatos.forEach(datos => {
+        const nuevaFila = document.createElement('tr');
+        nuevaFila.innerHTML = `
+            <td>${datos.marca}</td>
+            <td>${datos.modelo}</td>
+            <td>${datos.ano}</td>
+            <td>${datos.kilometraje}</td>
+            <td>${datos.precio}</td>
+        `;
+        bodyTabla.appendChild(nuevaFila);
+    });
+    var modal = new bootstrap.Modal(document.getElementById('modalReferencia'));
+    modal.show();
+    console.log(modalBody);
+}
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+        let fechaInicial_{{id}} = moment("{{this.moto.inicio_remate}}").getTime();
+    let txtFechaInicial_{{id}} = document.getElementById("txtFechaInicial-{{id}}");
+    txtFechaInicial_{{id}}.innerText = "Inicio Remate: "+moment(fechaicial_{{id}}).format("DD/MM/YYYY");
+    const fechaFinal_{{id}} = new Date("{{this.moto.fin_remate}}").getTime();
+    const timer_{{id}} = setInterval(function() {
+      const ahora = new Date().getTime();
+      const diferencia = fechaFinal_{{id}} - ahora;
+      const horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+      const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+      const finRemate_{{id}} = document.getElementById("finRemate-{{id}}");
+      finRemate_{{id}}.innerText = Fin Remate: ${horas}:${minutos}:${segundos};
+      if (diferencia <0) {
+        finRemate_{{id}}.innerText = Finalizado;
+        finRemate_{{id}}.style.color = "red";
+        botonPuja.classList.add("disabled");
+        let listaPujas = {{{json comprador}}};
+        let montoPagado = 0;
+        let compradorId = 0;
+        for (let i = 0; i < listaPujas.length; i++) {
+          if (listaPujas[i].idMoto == {{this.moto.id}}) {
+            if(montoPagado < listaPujas[i].monto){
+              montoPagado = listaPujas[i].monto;
+              compradorId = listaPujas[i].id_pujador;
+            }else{
+              montoPagado = montoPagado;
+            }
+          }
+        }
+        let response = fetch("/Motos/Post/finremate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            id: {{this.moto.id}},
+            idUsuario: compradorId,
+            monto: montoPagado
+          })
+        })
+      }
+    }, 1000);
+  });
+
+
+
+</script>
+
+<style>
+  .card-img {
+    width: 100%;
+    height: 35vh;
+  }
+
+
+ #timerPuja, #btnPuja, #btnFav, #btnComparar, #btnReferencia, #btnDetalle h7 {
+    display: inline-block; 
+    margin-left: 10px; 
+    vertical-align: middle; 
+    color: black;
+    font-family: 'Barlow', sans-serif;
+  }
+</style>

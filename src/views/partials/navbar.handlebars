@@ -1,0 +1,103 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary" style="background: #272527; color: #29aeab">
+  <div class="container-fluid" style="background-color: #272527">
+    <a class="navbar-brand" href="#" id="logoWeb">
+      <img src="/Motos/resources/img/Logo TRC Motors_COLOR_Turquesa_V1.png" width="120" height="100">
+      <h6 id="h5Footer">Desde 2001</h6>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" >
+      <span class="navbar-toggler-icon" ></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/Motos/home" style="color: #29aeab;">Inicio</a>
+        </li>
+        <li class="nav-item Logueado">
+          <a class="nav-link" href="/Motos/subastar"  id="linkSubastar" style="color: #29aeab;">Subastar</a>
+        </li>
+        <li class="nav-item sinSesion">
+          <a class="nav-link" href="/Motos/login" id="linkLogin" style="color: #29aeab;">Iniciar Sesion</a>
+        </li>
+        <li class="nav-item sinSesion">
+          <a class="nav-link" href="/Motos/registro" id="linkRegistro" style="color: #29aeab;">Registro</a>
+        </li>
+        <li class="nav-item dropdown Logueado" id="MenuUsuario">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+            style="color: #29aeab;">
+            Perfil
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/Motos/perfil" style="color: #29aeab;">Ver/ Editar Perfil</a></li>
+            <li><a class="dropdown-item" href="/Motos/historial" id="linkHistorial" style="color: #29aeab;">Historial Transacciones</a></li>
+            <li>
+              <hr class="dropdown-divider" />
+            </li>
+            <li><a class="dropdown-item" href="" id="linkLogout" style="color: #29aeab;">Cerrar Sesion</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<script>
+  
+  let linkLogout = document.getElementById("linkLogout"); 
+  let linkPerfilMenu = document.getElementById("linkPerfilMenu"); 
+  let linkPerfil = document.getElementById("linkPerfil");    
+  let linkSubMenu = document.getElementById("linkSubMenu");  
+  let MenuUsuario = document.getElementById("MenuUsuario");
+  if (token) {   
+    let usuario = JSON.parse(sessionStorage.getItem("user"));
+    let userId = usuario.id;
+    $(".sinSesion").hide();
+    $(".Logueado").show();
+  } else {
+   
+     $(".Logueado").hide();
+      $(".sinSesion").show();
+    
+  }
+  linkLogout.addEventListener("click", (event) => {
+    event.preventDefault();
+    sessionStorage.removeItem("token")
+    sessionStorage.clear();
+     document.cookie ='jwt=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    location.href = "/Motos/login";
+  })
+  linkPerfilMenu.addEventListener("mouseover", function () {
+    linkSubMenu.style.display = "block";
+  });
+  linkPerfilMenu.addEventListener("mouseout", function () {
+    linkSubMenu.style.display = "none";
+  });
+erw
+</script>
+<style>
+  .dropdown-menu {
+    background-color: #272527;
+  }
+    .navbar-toggler {
+    background-color: #29aeab;
+  }
+
+  a {
+    color: #29aeab;
+  }
+
+  #navbarSupportedContent {
+    margin-right: 3%;
+  }
+
+  #logoWeb {
+    margin-left: 2%;
+    text-align: center;
+  }
+
+  #h5Footer {
+    color: white;
+    font-family: 'Captures', sans-serif;
+    font-size: 70%;
+  }
+</style>

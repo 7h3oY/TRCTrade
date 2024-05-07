@@ -1,0 +1,177 @@
+<div class="container-xxl my-5" id="login">
+  <div class="row">
+    <div class="col-md-6" id="fondo">
+      <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    
+  </div>
+</div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-column">
+        <h3>Subasta</h3>
+        <h5>Publica tu moto y consigue el valor que deseas!</h5>
+        <form class="formulario"  id="formSubasta" enctype="multipart/form-data" method="post" action="/Motos/Post/EditarSubasta">
+         <input type="hidden"  id="id"  name="id">
+         <input type="hidden"  id="id_vendedor"  name="id_vendedor" >
+          <div class="form-group">
+            <label for="marca">Marca:</label>
+           
+            <select id="marca" class="dropdown" name="marca">
+              <option value="">Seleccione</option>
+            {{#each marcas}}
+              <option value="{{this.id}}">{{this.nombre}}</option>
+            {{/each}}
+          </select>
+          
+          </div>
+          <div class="form-group">
+            <label for="modeloM">Modelo:</label>
+            <input type="text" class="form-control" id="modeloM" placeholder="Ingrese Modelo" required  name="modelo">
+          </div>
+          <div class="form-group">
+            <label for="anoM">Ano:</label>
+            <input type="number" class="form-control" id="ano" placeholder="Ingrese ano de fabricación" required  name="ano">
+          </div>
+          <div class="form-group">
+            <label for="number">Cantidad de Duenos:</label>
+            <input type="text" class="form-control" id="duenos" placeholder="Ingrese cantidad de duenos" value="1" required  name="duenos">
+          </div>
+          <div class="form-group">
+            <label for="kilometraje">Kilometraje:</label>
+            <input type="number" step="100" class="form-control" id="kilometraje" placeholder="Ingrese Kilometraje" required  name="kilometraje">
+          </div>
+          <div class="form-group">
+            <label for="comuna">Comuna:</label>
+          
+            <select id="comuna" class="dropdown" name="comuna">
+             <option value="">Seleccione</option>
+            {{#each ciudades}}
+              <option value="{{this.id}}">{{this.nombre}}</option>
+            {{/each}}
+          </select>
+          
+          </div>
+          <div class="form-group">
+            <label for="precioM">Precio Minimo:</label>
+            <input type="numeric" class="form-control" id="precio_minimo" placeholder="Ingrese Precio Minimo" required name="precio_minimo">
+          </div>
+          <div class="form-group">
+            <label for="fecha_inicio">Inicio Remate:</label>
+            <input type="datetime-local" class="form-control" id="fecha_inicio" placeholder="Ingrese Fecha" required name="inicio_remate">
+          </div>
+          <div class="form-group">
+            <label for="fecha_fin">Fin Remate:</label>
+            <input type="datetime-local" class="form-control" id="fecha_fin" placeholder="Ingrese Fecha" required name="fin_remate">
+          </div>
+          <div class="mb-3">
+            <label for="imagenP" class="form-label">Imagen de Portada</label>
+            <input class="form-control" type="file" id="imagenP" name="imagenP"  accept="image/*" required>
+          </div>
+                <div class="mb-3">
+        <label for="imagenG" class="form-label">Selecione imagenes de la moto</label>
+        <input class="form-control" type="file" id="imagenG" multiple name="galeria"  accept="image/*">
+    </div>
+          <button type="submit" class="btn btn-primary">Crear Subasta</button>
+          <hr>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+
+     async function encodeFileAsBase64URL(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.addEventListener('loadend', () => {
+                    resolve(reader.result);
+                });
+                reader.readAsDataURL(file);
+            });
+        };
+    document.getElementById("imagenP").addEventListener("change", function(event) {
+        let usuario = localStorage.getItem("usuario");
+        
+        const files = event.target.files; 
+        const carouselInner = document.querySelector(".carousel-inner"); 
+        while (carouselInner.firstChild) {
+            carouselInner.removeChild(carouselInner.firstChild);
+        }
+        for (const file of files) {
+            const divimg = document.createElement("div");
+            divimg.classList.add("carousel-item");
+            const img = document.createElement("img");
+            img.classList.add("d-block", "w-100");
+            img.src = URL.createObjectURL(file); 
+            divimg.appendChild(img);
+            carouselInner.appendChild(divimg);
+        }
+        if (carouselInner.firstChild) {
+            carouselInner.firstChild.classList.add("active");
+        }
+    });
+
+    let usuarioId = document.getElementById("id_vendedor");
+    let usuario = JSON.parse(sessionStorage.getItem("user"));
+    usuarioId.value = usuario.id;
+
+</script>
+
+  
+
+<style>
+    @font-face {
+        font-family: Captures;
+        src: url('/Motos/resources/fonts/Captures.ttf');
+    }
+    #login{
+        box-shadow: 5px 5px 15px gray;
+    }
+.carousel  {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+h3{
+    
+}
+.carousel  img {
+  max-width: 100%;
+}
+.form-column {
+    margin-top: 10%;
+    padding: 20px;
+}
+.form-column h5{
+    font-family: 'Barlow', sans-serif;
+}
+.form-column h3{
+    font-family: 'Captures', sans-serif;
+}
+.formulario{
+    margin-top: 5%;
+}
+.container {
+  max-width: 50%; 
+  margin: auto; 
+  top: 10%;
+}
+.btn {
+    margin-top: 3%;
+}
+.btn-primary{
+        background-color: #29aeab;
+    color: white;
+    border: 1px solid black;
+}
+.btn-primary:hover{
+    background-color: transparent;
+    color: #29aeab;
+    border: 1px solid #29aeab;
+}
+
+</style>

@@ -1,0 +1,230 @@
+{{> banner}}
+
+<div class="container-fluid" id="containerHome">
+    {{> cardFilters}}
+    <a class="btn btn-outline-info" id="btnComparador" data-bs-toggle="modal", data-bs-target="#modalComparar" hidden><i class="bi bi-eye"></i>Ver Comparador</a>
+      <section>
+    {{#if postMotos}}
+    <input type="hidden" id="postMotosData" value="{{ postMotos }}" />
+        <h2 class="text-center mt-5" style="color: #29aeab;">Stock de Pujas Actual</h2>
+        {{#each postMotos}}
+            {{> cards 
+                Modelo = this.modelo
+                filePath = this.estado  
+                marca = this.id_vendedor
+                timmer = timer
+            }}
+        {{/each}} 
+ <div class="modal fade " id="modalComparar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Referencia basado en Chile Motos</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="bodyModal">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" onclick="limpiarComparar()">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btnComparar" data-bs-dismiss="modal">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    {{else}}
+        <h2 class="text-center">En este momento no tenemos Motos en venta</h2>
+    {{/if}}
+</section>
+</div>
+
+<script>
+    let listaMotos = {{{json postMotos}}};
+    let chileAutos = {{{json chileAutos}}};
+    let dataFiltrada = [];
+    let motosComparar = [];
+    let btnComparar = document.getElementById("btnComparador");
+    let modalComparar = document.getElementById("modalComparar");
+    const mapeoNombres = {
+    estado: "Estado Remate",
+    inicio_remate: "Inicio del Remate",
+    fin_remate: "Fin del Remate",
+    marca: "Marca",
+    modelo: "Modelo",
+    ano: "Ano",
+    kilometraje: "Kilometraje",
+    duenos: "Cantidad de Duenos",
+    comuna: "Comuna",
+    precio_minimo: "Precio Mínimo",
+};
+function aplicarFiltrosLista(filtros) {
+    $('.postCards').hide();
+    const listaFiltrada =listaMotos.filter(function(moto) {
+            moto.ano >= filtros.anioMin &&
+                   moto.ano <= filtros.anioMax &&
+                   moto.precio_minimo >= filtros.min &&
+                   moto.precio_minimo <= filtros.max &&
+                   moto.cantidad_duenos == filtros.duenos && 
+                   moto.marca === filtros.marca &&
+                   moto.modelo === filtros.modelo &&
+                   moto.comuna === filtros.comuna; 
+    });
+    for(const moto of listaFiltrada) {
+        $('#card-' + moto.id).show();
+    }
+}
+function limpiarFiltros() {
+    $('.postCards').show();
+}
+function addToComparar(moto) {
+    let motoObj = JSON.parse(moto);
+    let usuario = JSON.parse(localStorage.getItem("user"));
+    if (motosComparar.length < 3) {
+        if (motosComparar.find(item => item.id === motoObj.id)) {
+            Noti('error', "La moto ya existe en la lista de comparación");
+        } else {
+            btnComparar.hidden = false;            
+            motosComparar.push(motoObj);
+            actualizarModalComparar();
+        }
+        console.log(motosComparar);
+    } else {
+        Noti('error', "Alcanzaste el máximo de motos a comparar");
+    }
+}
+function actualizarModalComparar() {
+    const bodyM = document.getElementById("bodyModal");
+    bodyM.innerHTML = "";
+    const row = document.createElement("div");
+    row.classList.add("row");
+    let mejorPrecio = Infinity;
+    let mejorKilometraje = Infinity;
+    let menorDuenos = Infinity;
+    let mejorOpcion = null;
+    motosComparar.forEach(moto => {
+        if (moto.precio_minimo < mejorPrecio) {
+            mejorPrecio = moto.precio_minimo;
+            mejorOpcion = moto;
+        }
+        if (moto.kilometraje < mejorKilometraje) {
+            mejorKilometraje = moto.kilometraje;
+            mejorOpcion = moto;
+        }
+        if (moto.duenos < menorDuenos) {
+            menorDuenos = moto.duenos;
+            mejorOpcion = moto;
+        }
+    });
+    motosComparar.forEach(moto => {
+        let motoObjt = parseNombres(moto, mapeoNombres);
+        const col = document.createElement("div");
+        const rowImg = document.createElement("div");
+        col.setAttribute("class", "col-md-4 custom-col");
+        rowImg.classList.add("row");
+        const motoTitle = document.createElement("h6");
+        motoTitle.innerText = `Moto ${motoObjt.Marca} - ${motoObjt.Modelo}`;
+           if (moto === mejorOpcion) {
+            const badge = document.createElement("span");
+            const divB = document.createElement("div");
+            badge.classList.add("bi", "bi-bag-heart-fill", "mejorOpcion");
+            badge.innerText = "Mejor Opción";
+            divB.classList.add("container-fluid","mejor-opcionSpan");
+            divB.appendChild(badge);
+            col.classList.add("mejor-opcion");
+            col.appendChild(divB);
+        }
+        rowImg.setAttribute("id", `rowImg-${moto.id}`);
+        rowImg.innerHTML = `<img src="/Motos/resources/upload/${moto.id}/${moto.portada}" class="card-img" alt="...">`;
+        col.appendChild(motoTitle);
+        col.appendChild(rowImg);
+for (const key in motoObjt) {
+    if (key !== "id" && key !== "id_vendedor" && key !== "factura" && key !== "createdAt" && key !== "updatedAt") {
+        const motoInfo = document.createElement("p");
+        motoInfo.innerText = `${key}: ${motoObjt[key]}`;
+        col.appendChild(motoInfo);
+    }
+}
+
+        row.appendChild(col);
+    });
+    bodyM.appendChild(row);
+}
+function parseNombres(objeto, mapeo) {
+    const objetoNuevo = {};
+    for (const clave in objeto) {
+        if (mapeo.hasOwnProperty(clave)) {
+            objetoNuevo[mapeo[clave]] = objeto[clave];
+        } else {
+            objetoNuevo[clave] = objeto[clave];
+        }
+    }
+    return objetoNuevo;
+}
+
+function limpiarComparar() {
+    btnComparar.hidden = true;
+    motosComparar = [];
+    actualizarModalComparar();
+}
+
+function referenciaChileautos(moto) {
+    let motoObj = JSON.parse(moto);
+    let marcaLista == {{{json marca}}};
+    let data = Object.values(chileAutos.datos);
+    const listaFiltrada = data.filter(function(motoCH) {
+            for (var attr in motoObj) {
+                let marca = marcaLista.find((m) => m.id == motoCH.marca).nombre;
+                if(attr == "ano"){
+                    if(attr == marca && attr == "modelo"){
+                         if (motoObj[attr] !== motoCH[attr]) {
+                        return false;
+                     }else{
+                        return true;
+                    }
+                    }
+                }
+        }
+        return true;
+    });
+    dataFiltrada = data;
+    poblarModalChileAutos(listaFiltrada);
+}
+
+</script>
+
+<style>
+    #containerHome{
+        max-width: 100%;
+        width: 80%;
+    }
+
+    .custom-col {
+    border-right: 1px solid #29aeab; 
+    padding-right: 15px; 
+}   
+    .mejor-opcionSpan{
+        background-color: goldenrod;
+        border-radius: 3%;
+        border-bottom: 2px solid black;
+        font-weight: bolder;
+        width: 100%;
+        text-align: center;
+    }
+    .mejor-opcion {
+        color: black;
+        background: linear-gradient(to bottom, #29aeab, #ffffff);
+        border: 5px solid #29aeab;
+        border-radius: 5px;
+    }
+    .mejor-opcion h6{
+        color: #262526;
+    }
+    .mejorOpcion{
+        color: #262526;
+        font-size: x-large;
+        font-family: 'Captures', sans-serif;
+    }
+
+</style>

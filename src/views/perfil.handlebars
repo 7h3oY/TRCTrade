@@ -1,0 +1,202 @@
+<div class="container-xxl my-5" id="login">
+  <div class="row">
+    <div class="col-md-4 d-flex flex-column justify-content-center align-items-center" id="fondo">
+        <div class="text-column text-center">
+            <h3 id="nombreTitulo">Usuario</h3>
+            <h6 id="usernameTitulo">@Username</h6>
+            <h6 id="lvlUsuario">@Username</h6>
+        </div>
+        <div class="image-column">
+            <img src="/Motos/resources/img/perfil.png" alt="Imagen de fondo" id="imgPerfil">
+        </div>
+        <div class="mb-3">
+            <div class="input-group">
+                <input type="file" id="imagenP" name="imagenP" style="display: none;">
+                <button type="button" class="btn btn-primary" onclick="document.getElementById('imagenP').click()" id="btnImg">Cambiar Imagen de Perfil</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+      <div class="form-column">
+        <h5>Puedes Editar tus datos aqui!</h5>
+        <form class="formulario" action="" id="formPerfil">
+          <div class="form-group">
+            <label for="email">Nombre:</label>
+            <input type="text" class="form-control" id="nombre" placeholder="Ingrese su nombre" required  name="nombre" disabled>
+          </div>
+          <div class="form-group">
+            <label for="email">Apellido Paterno:</label>
+            <input type="text" class="form-control" id="apellidoP" placeholder="Ingrese su apellido" required  name="apellido_pat" disabled>
+          </div>
+          <div class="form-group">
+            <label for="email">Apellido Materno:</label>
+            <input type="text" class="form-control" id="apellidoM" placeholder="Ingrese su apellido" required  name="apellido_mat" disabled>
+          </div>
+          <div class="form-group">
+            <label for="email">Correo electrónico:</label>
+            <input type="email" class="form-control" id="email" placeholder="Ingrese su correo electrónico" required  name="email" disabled>
+          </div>
+          <div class="form-group">
+            <label for="email">Username:</label>
+            <input type="text" class="form-control" id="username" placeholder="Ingrese username" required  name="unombre" disabled>
+          </div>
+          <div class="form-group">
+            <label for="password">Contrasena:</label>
+            <input type="password" class="form-control" id="password" placeholder="Ingrese su contrasena" required name="password" disabled>
+          </div>
+          <button type="submit" class="btn btn-primary" id="btnGuardar" style="display: none;">Guardar Cambios</button>
+          <button class="btn btn-primary" id="btnCancelar" style="display: none; background-color: red; color: black;">Cancelar</button>
+          
+        </form>
+            <button class="btn btn-primary" id="btnEditar">Editar Perfil</button>
+            <hr>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    let formPerfil = document.getElementById("formPerfil");
+    let btnEditar = document.getElementById("btnEditar");
+    let btnGuardar = document.getElementById("btnGuardar");
+    let btnCancelar = document.getElementById("btnCancelar");
+    let btnImg = document.getElementById("btnImg");
+    let usuario = JSON.parse(localStorage.getItem("user"));
+    console.log(usuario);
+    let nombre = document.getElementById("nombre");
+    let apellido_mat = document.getElementById("apellidoM");
+    let apellido_pat = document.getElementById("apellidoP");
+    let email = document.getElementById("email");
+    let username = document.getElementById("username");
+    let password = document.getElementById("password");
+    let imgPerfil = document.getElementById("imgPerfil");
+    let usernameTitulo = document.getElementById("usernameTitulo");
+    let nombreTitulo = document.getElementById("nombreTitulo");
+    let lvlUsuario = document.getElementById("lvlUsuario");
+    nombre.value = usuario.nombre;
+    apellido_mat.value = usuario.apellido_mat;
+    apellido_pat.value = usuario.apellido_pat;
+    email.value = usuario.email;
+    username.value = usuario.unombre;
+    password.value = usuario.password;
+    nombreTitulo.innerHTML = usuario.nombre + " " + usuario.apellido_pat + " " + usuario.apellido_mat;
+    usernameTitulo.innerHTML = "@" + usuario.unombre;
+    lvlUsuario.innerHTML = "Nivel de Usuario: " +usuario.nivel_usuario;
+    btnEditar.addEventListener("click", () => {
+        nombre.disabled = false;
+        apellido_mat.disabled = false;
+        apellido_pat.disabled = false;
+        email.disabled = false;
+        username.disabled = false;
+        password.disabled = false;
+        btnEditar.style.display = "none";
+        btnCancelar.style.display = "block";
+        btnGuardar.style.display = "block";
+    })
+    btnCancelar.addEventListener("click", () => {
+        nombre.disabled = true;
+        apellido_mat.disabled = true;
+        apellido_pat.disabled = true;
+        email.disabled = true;
+        username.disabled = true;
+        password.disabled = true;
+        btnEditar.style.display = "block";
+        btnCancelar.style.display = "none";
+        btnGuardar.style.display = "none";
+    })
+    btnImg.addEventListener("click", () => {
+        let imgPerfil = document.getElementById("imgPerfil");
+        imgPerfil.setAttribute("src", "/Motos/resources/img/perfil.png");
+    })
+    formPerfil.addEventListener("submit", async (event) => {
+            event.preventDefault();
+        let nombre = document.getElementById("nombre").value;
+        let apellido_pat = document.getElementById("apellidoP").value;
+        let apellido_mat = document.getElementById("apellidoM").value;
+        let email = document.getElementById("email").value;
+        let unombre = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+        let bodyData = {
+            nombre: nombre,
+            apellido_pat: apellido_pat,
+            apellido_mat: apellido_mat,
+            email: email,
+            unombre: unombre,
+            password: password
+        };
+        let userId = usuario.id;
+        let response = await fetch("/Motos/Post/updateUsuario/${userId}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(bodyData) 
+        })
+        let result = await response.json();
+        if(response.ok){
+            localStorage.setItem("token", result.token);
+            localStorage.setItem("usuario", JSON.stringify(result.usuario))
+            alert("Usuario modificado con exito");
+            location.href = "Motos/login"
+
+        }else{
+            alert("Ocurrio un error");
+        }
+    })
+
+</script>
+
+  
+
+<style>
+    @font-face {
+        font-family: Captures;
+        src: url('/Motos/resources/fonts/Captures.ttf');
+    }
+    #login{
+        box-shadow: 5px 5px 15px gray;
+    }
+.col-md-4{
+    text-align: center;
+    margin: 0 auto;
+    padding: auto;
+}
+
+.image-column img {
+  max-width: 50%;
+  border: solid 1px black;
+  border-radius: 60%;
+}
+.form-column {
+    margin-top: 10%;
+    padding: 20px;
+}
+.form-column h5{
+    font-family: 'Barlow', sans-serif;
+}
+.text-column h3{
+    font-family: 'Captures', sans-serif;
+}
+.formulario{
+    margin-top: 5%;
+}
+.container {
+  max-width: 50%; 
+  margin: auto; 
+  top: 10%;
+}
+.btn {
+    margin-top: 3%;
+}
+.btn-primary{
+        background-color: #29aeab;
+    color: white;
+    border: 1px solid black;
+}
+.btn-primary:hover{
+    background-color: transparent;
+    color: #29aeab;
+    border: 1px solid #29aeab;
+}
+
+</style>

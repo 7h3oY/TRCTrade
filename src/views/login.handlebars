@@ -1,0 +1,125 @@
+<div class="container my-5" id="login">
+  <div class="row">
+    <div class="col-md-6" id="fondo">
+      <div class="image-column">
+        <img src="/Motos/resources/img/fondo2.jpg" alt="Imagen de fondo">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-column">
+        <h3>Iniciar sesión</h3>
+        <h5>Bienvenido!</h5>
+        <form class="formulario" action="" id="formLogin">
+          <div class="form-group">
+            <label for="email">Usuario:</label>
+            <input type="text" class="form-control" id="nombreU" placeholder="Ingrese su correo electrónico" required  name="usuario">
+          </div>
+          <div class="form-group">
+            <label for="password">Contrasena:</label>
+            <input type="password" class="form-control" id="password" placeholder="Ingrese su contrasena" required name="password">
+          </div>
+          <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+          <a href="/Motos/recuperar_contrasena" class="btn btn-link">¿Olvidó su contrasena?</a>
+          <hr>
+          <p>¿No tiene una cuenta? <a href="/Motos/registro">Regístrese aquí</a></p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+    let formLogin = document.getElementById("formLogin");
+       document.cookie ='jwt=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+   sessionStorage.clear();
+   localStorage.clear();
+    formLogin.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            let usuario = document.getElementById("nombreU").value;
+            let password = document.getElementById("password").value;
+            let bodyData = {
+              unombre: usuario,
+              password: password
+          };
+
+            let response = await fetch("/Motos/Post/login", {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json"
+                },
+                body: JSON.stringify(bodyData)
+            })
+          
+            let result = await response.json();
+          
+            if(response.ok){
+                 sessionStorage.setItem("token", result.token);
+                  sessionStorage.setItem("user", JSON.stringify(result.user));
+                localStorage.setItem("token", result.token);
+                  localStorage.setItem("user", JSON.stringify(result.user));
+                location.href = "/Motos/home"
+            }else{
+                alert("Error al iniciar sesión");
+            }
+        })
+
+</script>
+
+  
+
+<style>
+    @font-face {
+        font-family: Captures;
+        src: url('/Motos/resources/fonts/Captures.ttf');
+    }
+    #login{
+        box-shadow: 5px 5px 15px gray;
+        max-width: 80%;
+    }
+.image-column {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+h3{
+    
+}
+.image-column img {
+  max-width: 100%;
+}
+.form-column {
+    margin-top: 10%;
+    padding: 20px;
+}
+.form-column h5{
+    font-family: 'Barlow', sans-serif;
+}
+.form-column h3{
+    font-family: 'Captures', sans-serif;
+}
+.formulario{
+    margin-top: 5%;
+}
+.container {
+  max-width: 50%; 
+  margin: auto; 
+  top: 10%;
+}
+.btn {
+    margin-top: 3%;
+}
+.btn-primary{
+    background-color: #29aeab;
+    color: white;
+    border: 1px solid black;
+}
+.btn-primary:hover{
+    background-color: transparent;
+    color: #29aeab;
+    border: 1px solid #29aeab;
+}
+
+</style>

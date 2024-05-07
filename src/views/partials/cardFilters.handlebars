@@ -1,0 +1,152 @@
+<nav class="navbar bg-body-tertiary" style="background: #272527;">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Aplicar Filtros</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Filtros</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <div id="filtrosSelecionados" class="filtros">
+
+        </div>
+        <div id="filtrosUbicacion" class="filtros">
+          <div class="dropdown">
+            <h6>Ubicacion</h6>
+          <select id="comuna" class="dropdown">
+            {{#each ciudades}}
+              <option value="{{this.id}}">{{this.nombre}}</option>
+            {{/each}}
+          </select>
+        </div>
+        </div>
+        <div id="filtrosDueno" class="filtros">
+            <h6>Cantidad Duenos</h6>
+        <div class="input-group input-group-sm mb-3">
+          <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" id="cantDuenos">
+        </div>
+        </div>
+        <div id="filtrosAnos" class="filtros">
+            <h6>Anos</h6>
+            <label for="anoMin" class="form-label">Ano Minimo: <span id="anoMinValor">1900</span></label>
+            <input type="range" class="form-range" id="anoMin" min="1900" max="2024" value="1900">
+            <label for="anoMax" class="form-label">Ano Maximo: <span id="anoMaxValor">2024</span></label>
+            <input type="range" class="form-range" id="anoMax" min="1900" max="2024" value="2024">
+        </div>
+        <div id="filtrosMarcaModelo" class="filtros">
+            <h6>Marca y Modelo</h6>
+                <div class="dropdown">
+          <label for="">Marca</label>
+            <select  class="dropdown">
+            {{#each marca}}
+              <option id="marca" value="{{this.id}}">{{this.nombre}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="dropdown">
+          <label for="">Modelo</label>
+            <select id="modelo" class="dropdown">
+
+          </select>
+        </div>
+        </div>
+        <div id="filtrosPrecio" class="filtros">
+            <h6>Precio</h6>
+            <div class="input-group mb-3">
+          <span class="input-group-text">$</span>
+          <span class="input-group-text">Min</span>
+          <input type="text" class="form-control" aria-label="Dollar amount (with dot and two decimal places)" id="minPrecio">
+          <div class="input-group mb-3">
+          <span class="input-group-text">$</span>
+          <span class="input-group-text">Max</span>
+          <input type="text" class="form-control" aria-label="Dollar amount (with dot and two decimal places)" id="maxPrecio">
+        </div>
+        </div>
+
+        </div>
+        <button type="button" class="btn btn-outline-primary" id="aplicarFiltros">Aplicar Filtros</button>
+        <button type="button" class="btn btn-outline-danger" id="limpiarFiltros">Limpiar Filtros</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+<script>
+  let anoMin = document.getElementById("anoMin");
+  let anoMax = document.getElementById("anoMax");
+  let anoMinValor = document.getElementById("anoMinValor");
+  let anoMaxValor = document.getElementById("anoMaxValor");
+  let btnFiltro = document.getElementById("aplicarFiltros");
+  let clearFiltro = document.getElementById("limpiarFiltros");
+  let marca = document.getElementById("marca");
+  let modelo = document.getElementById("modelo");
+  let comuna = document.getElementById("comuna");
+  let duenos = document.getElementById("cantDuenos");
+  let maxPrecio = document.getElementById("maxPrecio");
+  let minPrecio = document.getElementById("minPrecio");
+  const actualizarValor = (input, valorElemento) => {
+    valorElemento.textContent = input.value;
+};
+
+anoMin.addEventListener("input", () => {
+  actualizarValor(anoMin, anoMinValor);
+});
+anoMax.addEventListener("input", () => {
+  actualizarValor(anoMax, anoMaxValor);
+});
+
+btnFiltro.addEventListener("click", () => {
+  let marcaSeleccionada = marca.value;
+  let modeloSeleccionado = modelo.value;
+  let comunaSeleccionada = comuna.value;
+  let duenosSeleccionados = duenos.value;
+   let anoMax = anoMaxValor.value;
+   let anoMin = anoMinValor.value;
+   let max = maxPrecio.value;
+   let min = minPrecio.value;
+   let filtros = {
+    anioMax: anoMax,
+    anioMin: anoMin,
+    duenos: duenosSeleccionados,
+    max: max,
+    min: min,
+    marca: marcaSeleccionada,
+    modelo: modeloSeleccionado,
+    comuna: comunaSeleccionada
+   };
+   console.log(filtros);
+   aplicarFiltrosLista(filtros);
+});
+
+clearFiltro.addEventListener("click", () => {  
+  limpiarFiltros();
+});
+
+</script>
+
+<style>
+    .filtros {
+  margin-top: 20%;
+  padding: 0 auto;
+  width: 100%;
+  max-width: 80%; 
+  font-size: 100%;
+}
+.dropdown {
+  flex: 1;
+  margin-right: 1rem;
+  max-width: 100%;
+  
+}
+    #dropModelo{
+        margin-top: 4%;
+    }
+    h6{
+        color: #29aeab;
+    }
+
+</style>

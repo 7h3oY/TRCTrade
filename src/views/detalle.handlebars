@@ -1,0 +1,96 @@
+
+<div class="container-xxl my-5" id="login">
+    {{#if moto}}
+  <div class="row">
+    <div class="col-md-6" id="fondo">
+        <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <img src="/motos/resources/uploads/{{moto.datosMoto.id}}/{{moto.datosMoto.portada}}" class="d-block w-100" alt="...">
+                {{#each moto.datosMoto.galeria}}
+                    <img src="/motos/resources/uploads/{{moto.datosMoto.id}}/galeria/{{this}}" class="d-block w-100" alt="...">
+                {{/each}}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-column">
+        <h3>Detalle</h3>
+        <h5>Detalle completo de {{moto.datosMoto.nombreMarca}} {{moto.datosMoto.modelo}} !</h5>
+        <div class="col-md-8">
+            <div class="card-body">
+                <p class="card-text">Ano :{{moto.datosMoto.ano}}</p>
+                <p class="card-text">{{moto.datosMoto.kilometraje}} Kms</p>
+                <p class="card-text">Inicio Remate: {{moto.datosMoto.inicio_remate}}</p>
+                <p class="card-text">Fin Remate: {{moto.datosMoto.fin_remate}}</p>
+                <p class="card-text">Cantidad Duenos: {{moto.datosMoto.duenos}}</p>
+                <p class="card-text">Comuna: {{moto.datosMoto.comuna}}</p>
+                
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    {{/if}}
+</div>
+
+
+<script>
+   
+
+</script>
+
+  
+
+<style>
+    @font-face {
+        font-family: Captures;
+        src: url('/Motos/resources/fonts/Captures.ttf');
+    }
+    #login{
+        box-shadow: 5px 5px 15px gray;
+    }
+.carousel  {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+h3{
+    
+}
+.carousel  img {
+  max-width: 100%;
+}
+.form-column {
+    margin-top: 10%;
+    padding: 20px;
+}
+.form-column h5{
+    font-family: 'Barlow', sans-serif;
+}
+.form-column h3{
+    font-family: 'Captures', sans-serif;
+}
+.formulario{
+    margin-top: 5%;
+}
+.container {
+  max-width: 50%; 
+  margin: auto; 
+  top: 10%;
+}
+.btn {
+    margin-top: 3%;
+}
+.btn-primary{
+        background-color: #29aeab;
+    color: white;
+    border: 1px solid black;
+}
+.btn-primary:hover{
+    background-color: transparent;
+    color: #29aeab;
+    border: 1px solid #29aeab;
+}
+
+</style>

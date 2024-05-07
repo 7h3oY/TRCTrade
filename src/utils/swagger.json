@@ -1,0 +1,1381 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Ventas Motos",
+    "description": "Description",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001/Motos/api/v1/",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "RUTA/Post/registro": {
+      "post": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/auth/registro": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "description": "",
+        "responses": {
+          "422": {
+            "description": "El Usuario ya existe"
+          }
+        },
+        "requestBody": {
+          "description": "Crear nuevo usuario",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistroUsuario"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "requestBody": {
+          "description": "Credenciales del usuario.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/usuario/Listar": {
+      "get": {
+        "tags": [
+          "usuario"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Retorna todos los usuario",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usuario"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/usuario/{id}": {
+      "get": {
+        "tags": [
+          "usuario"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Id del usuario",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalle usuario",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usuario"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuario no encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "usuario"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Id del usuario",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Usuario no encontrado"
+          },
+          "422": {
+            "description": "Datos duplicados de otro usuario"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Actualizar usuario",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarUsuario"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarUsuario"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "usuario"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Id del usuario",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuario Eliminado"
+          },
+          "404": {
+            "description": "Usuario no encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Eliminar un usuario",
+          "required": true
+        }
+      }
+    },
+    "/usuario/Crear": {
+      "post": {
+        "tags": [
+          "usuario"
+        ],
+        "description": "",
+        "responses": {
+          "422": {
+            "description": "El Usuario ya existe"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Crear nuevo usuario",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NuevoUsuario"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ciudad/Listar": {
+      "get": {
+        "tags": [
+          "ciudad"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Retorna todas las regiones, provincias y comunas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ciudad"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ciudad/ListarRegiones": {
+      "get": {
+        "tags": [
+          "ciudad"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Retorna todas las regiones",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ciudad"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ciudad/ListarComunas": {
+      "get": {
+        "tags": [
+          "ciudad"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Retorna todas las comunas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ciudad"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/moto/Listar": {
+      "get": {
+        "tags": [
+          "moto"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna todas las motos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Moto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/moto/ListarPorEstado/{estado}": {
+      "get": {
+        "tags": [
+          "moto"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "estado",
+            "description": "Estado de la moto",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna todas las motos con dicho estado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Moto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/moto/{id}": {
+      "get": {
+        "tags": [
+          "moto"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Id de la moto",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalle moto",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Moto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Moto no encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "moto"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Id de la moto",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Moto no encontrada"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Actualizar moto",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarMoto"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarMoto"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "moto"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Id de la moto",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Moto Eliminada"
+          },
+          "404": {
+            "description": "Moto no encontrada"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Eliminar una moto",
+          "required": true
+        }
+      }
+    },
+    "/moto/Crear": {
+      "post": {
+        "tags": [
+          "moto"
+        ],
+        "description": "",
+        "responses": {
+          "422": {
+            "description": "El Moto ya existe"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Crear nueva moto",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NuevaMoto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/puja/Listar": {
+      "get": {
+        "tags": [
+          "puja"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Retorna todas las pujas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Puja"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/puja/ListarPorUsuario/{idUsuario}": {
+      "get": {
+        "tags": [
+          "puja"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Retorna todas las pujas del usuario",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Puja"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/puja/ListarPorMoto/{idMoto}": {
+      "get": {
+        "tags": [
+          "puja"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Retorna todas las pujas de la moto",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Puja"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/puja/{id}": {
+      "get": {
+        "tags": [
+          "puja"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Id de la puja",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalle puja",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Puja"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Puja no encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "puja"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Id de la puja",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Puja no encontrada"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Actualizar puja",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarPuja"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarPuja"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "puja"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Id de la puja",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Puja Eliminada"
+          },
+          "404": {
+            "description": "Puja no encontrada"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Eliminar una puja",
+          "required": true
+        }
+      }
+    },
+    "/puja/Crear": {
+      "post": {
+        "tags": [
+          "puja"
+        ],
+        "description": "",
+        "responses": {
+          "422": {
+            "description": "El Puja ya existe"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Crear nueva puja",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NuevaPuja"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/favorito/Listar": {
+      "get": {
+        "tags": [
+          "favorito"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Retorna todos los favoritos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Favorito"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/favorito/ListarPorUsuario/{idUsuario}": {
+      "get": {
+        "tags": [
+          "favorito"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Retorna todos los favoritos del usuario",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Favorito"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/favorito/ListarPorMoto/{idMoto}": {
+      "get": {
+        "tags": [
+          "favorito"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Retorna todos los favoritos de la moto",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Favorito"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/favorito/CambiarFavorito": {
+      "post": {
+        "tags": [
+          "favorito"
+        ],
+        "description": "",
+        "responses": {
+          "422": {
+            "description": "El Favorito ya existe"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Crear nuevo favorito",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NuevoFavorito"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/favorito/Crear": {
+      "post": {
+        "tags": [
+          "favorito"
+        ],
+        "description": "",
+        "responses": {
+          "422": {
+            "description": "El Favorito ya existe"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Crear nuevo favorito",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NuevoFavorito"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/favorito/{id}": {
+      "delete": {
+        "tags": [
+          "favorito"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Id del favorito",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Favorito Eliminado"
+          },
+          "404": {
+            "description": "Favorito no encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Eliminar un favorito",
+          "required": true
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "RegistroUsuario": {
+        "type": "object",
+        "properties": {
+          "unombre": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "password": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "email": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "nombre": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "apellido_pat": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "apellido_mat": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          }
+        }
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "unombre": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "password": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          }
+        }
+      },
+      "Usuario": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "nivel_usuario": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "unombre": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "password": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "email": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "nombre": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "apellido_pat": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "apellido_mat": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "NuevoUsuario": {
+        "type": "object",
+        "properties": {
+          "nivel_usuario": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "unombre": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "password": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "email": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "nombre": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "apellido_pat": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "apellido_mat": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          }
+        }
+      },
+      "ActualizarUsuario": {
+        "type": "object",
+        "properties": {
+          "nivel_usuario": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "unombre": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "password": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "email": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "nombre": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "apellido_pat": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "apellido_mat": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          }
+        }
+      },
+      "Ciudad": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "tipo": {
+            "type": "string"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "sigla": {
+            "type": "string"
+          },
+          "id_padre": {
+            "type": "integer",
+            "format": "int11"
+          }
+        }
+      },
+      "Moto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "estado": {
+            "type": "string",
+            "description": "Largo maximo: 30"
+          },
+          "id_vendedor": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "inicio_remate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fin_remate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "marca": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "modelo": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "ano": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "kilometraje": {
+            "type": ""
+          },
+          "duenos": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "comuna": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "factura": {
+            "type": "string",
+            "description": "Largo maximo: 2"
+          },
+          "precio_minimo": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "NuevaMoto": {
+        "type": "object",
+        "properties": {
+          "estado": {
+            "type": "string",
+            "description": "Largo maximo: 30"
+          },
+          "id_vendedor": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "inicio_remate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fin_remate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "marca": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "modelo": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "ano": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "kilometraje": {
+            "type": ""
+          },
+          "duenos": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "comuna": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "factura": {
+            "type": "string",
+            "description": "Largo maximo: 2"
+          },
+          "precio_minimo": {
+            "type": "integer",
+            "format": "int11"
+          }
+        }
+      },
+      "ActualizarMoto": {
+        "type": "object",
+        "properties": {
+          "estado": {
+            "type": "string",
+            "description": "Largo maximo: 30"
+          },
+          "id_vendedor": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "inicio_remate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fin_remate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "marca": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "modelo": {
+            "type": "string",
+            "description": "Largo maximo: 100"
+          },
+          "ano": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "kilometraje": {
+            "type": ""
+          },
+          "duenos": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "comuna": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "factura": {
+            "type": "string",
+            "description": "Largo maximo: 2"
+          },
+          "precio_minimo": {
+            "type": "integer",
+            "format": "int11"
+          }
+        }
+      },
+      "Favorito": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "id_moto": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "id_usuario": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "NuevoFavorito": {
+        "type": "object",
+        "properties": {
+          "id_moto": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "id_usuario": {
+            "type": "integer",
+            "format": "int11"
+          }
+        }
+      },
+      "ActualizarFavorito": {
+        "type": "object",
+        "properties": {
+          "id_moto": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "id_usuario": {
+            "type": "integer",
+            "format": "int11"
+          }
+        }
+      },
+      "Puja": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "id_moto": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "id_pujador": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "monto": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "NuevaPuja": {
+        "type": "object",
+        "properties": {
+          "id_moto": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "id_pujador": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "monto": {
+            "type": "integer",
+            "format": "int11"
+          }
+        }
+      },
+      "ActualizarPuja": {
+        "type": "object",
+        "properties": {
+          "id_moto": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "id_pujador": {
+            "type": "integer",
+            "format": "int11"
+          },
+          "monto": {
+            "type": "integer",
+            "format": "int11"
+          }
+        }
+      }
+    }
+  }
+}
